@@ -1,9 +1,9 @@
 package by.home.klimov;
 
 public class MapPart {
-    private int num;
-    private int corX;
-    private int corY;
+    private final int num;
+    private final int corX;
+    private final int corY;
     private boolean selected = false;
 
     public MapPart(int num, int corY, int corX) {
@@ -23,16 +23,8 @@ public class MapPart {
         return corX;
     }
 
-    public void setCorX(int corX) {
-        this.corX = corX;
-    }
-
     public int getCorY() {
         return corY;
-    }
-
-    public void setCorY(int corY) {
-        this.corY = corY;
     }
 
     public boolean isSelected() {
@@ -45,9 +37,5 @@ public class MapPart {
 
     public int getNum() {
         return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
     }
 }

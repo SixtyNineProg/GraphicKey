@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class GraphicNode {
-    private int num;
-    private int corX;
-    private int corY;
+    private final int num;
+    private final int corX;
+    private final int corY;
 
     private List<GraphicNode> allowedTransitions;
     private List<MapPart> map;
@@ -112,40 +112,8 @@ public class GraphicNode {
         }
     }
 
-    public int getNum() {
-        return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
-    }
-
-    public int getCorX() {
-        return corX;
-    }
-
-    public void setCorX(int corX) {
-        this.corX = corX;
-    }
-
-    public int getCorY() {
-        return corY;
-    }
-
-    public void setCorY(int corY) {
-        this.corY = corY;
-    }
-
     public List<GraphicNode> getAllowedTransitions() {
         return allowedTransitions;
-    }
-
-    public void setAllowedTransitions(ArrayList<GraphicNode> allowedTransitions) {
-        this.allowedTransitions = allowedTransitions;
-    }
-
-    public List<MapPart> getMap() {
-        return map;
     }
 
     public void setMap(List<MapPart> map) {
