@@ -9,7 +9,7 @@ public class GraphicNode {
     private int corX;
     private int corY;
 
-    private List<MapPart> allowedTransitions;
+    private List<GraphicNode> allowedTransitions;
     private List<MapPart> map;
 
     public GraphicNode(int num, int corX, int corY) {
@@ -40,6 +40,78 @@ public class GraphicNode {
                 .orElse(null);
     }
 
+    public void addAllowedTransitions() {
+        ArrayList<GraphicNode> allowedTransactions
+                = new ArrayList<>();
+        for (MapPart mapPart : map) {
+            if (!mapPart.isSelected()) {
+                int differenceX = mapPart.getCorX() - corX;
+                int differenceY = mapPart.getCorY() - corY;
+
+                if (differenceX == 0 && (differenceY > 1 || differenceY < -1)) {
+
+                    MapPart tempMapPart;
+                    if (differenceY < 0) tempMapPart = findInMap(corX, corY - 1);
+                    else tempMapPart = findInMap(corX, corY + 1);
+
+                    if (tempMapPart.isSelected())
+                        allowedTransactions.add(new GraphicNode(
+                                mapPart.getNum(),
+                                mapPart.getCorX(),
+                                mapPart.getCorY(),
+                                getCloneMap()));
+                    continue;
+                }
+                if (differenceY == 0 && (differenceX > 1 || differenceX < -1)) {
+
+                    MapPart tempMapPart;
+                    if (differenceX < 0) tempMapPart = findInMap(corX - 1, corY);
+                    else tempMapPart = findInMap(corX + 1, corY);
+
+                    if (tempMapPart.isSelected())
+                        allowedTransactions.add(new GraphicNode(
+                                mapPart.getNum(),
+                                mapPart.getCorX(),
+                                mapPart.getCorY(),
+                                getCloneMap()));
+                    continue;
+                }
+                if ((differenceX == 2 || differenceX == -2) && (differenceY == 2 || differenceY == -2)) {
+
+                    MapPart tempMapPart;
+                    if (differenceY == 2 && differenceX == -2) tempMapPart = findInMap(corX - 1, corY + 1);
+                    else if (differenceY == -2 && differenceX == 2) tempMapPart = findInMap(corX + 1, corY - 1);
+                    else if (differenceY == -2) tempMapPart = findInMap(corX - 1, corY - 1);
+                    else tempMapPart = findInMap(corX + 1, corY + 1);
+
+                    if (tempMapPart.isSelected())
+                        allowedTransactions.add(new GraphicNode(
+                                mapPart.getNum(),
+                                mapPart.getCorX(),
+                                mapPart.getCorY(),
+                                getCloneMap()));
+                    continue;
+                }
+                allowedTransactions.add(new GraphicNode(
+                        mapPart.getNum(),
+                        mapPart.getCorX(),
+                        mapPart.getCorY(),
+                        getCloneMap()));
+            }
+        }
+        this.allowedTransitions = allowedTransactions;
+    }
+
+    public void printMap() {
+        int i = 1;
+        System.out.println();
+        for (MapPart mapPart : map) {
+            System.out.print(mapPart.isSelected() ? 1 : 0);
+            if (i % 3 == 0) System.out.println();
+            i++;
+        }
+    }
+
     public int getNum() {
         return num;
     }
@@ -64,12 +136,12 @@ public class GraphicNode {
         this.corY = corY;
     }
 
-    public List<MapPart> getAllowedTransitions() {
+    public List<GraphicNode> getAllowedTransitions() {
         return allowedTransitions;
     }
 
-    public void setAllowedTransitions(ArrayList<MapPart> allowedЕTransitions) {
-        this.allowedTransitions = allowedЕTransitions;
+    public void setAllowedTransitions(ArrayList<GraphicNode> allowedTransitions) {
+        this.allowedTransitions = allowedTransitions;
     }
 
     public List<MapPart> getMap() {

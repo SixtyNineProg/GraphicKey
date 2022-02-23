@@ -2,8 +2,8 @@ package by.home.klimov;
 
 public class MapPart {
     private int num;
-    private int corY;
     private int corX;
+    private int corY;
     private boolean selected = false;
 
     public MapPart(int num, int corY, int corX) {
