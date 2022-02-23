@@ -148,7 +148,7 @@ public class GraphicNode {
         return map;
     }
 
-    public void setMap(ArrayList<MapPart> map) {
+    public void setMap(List<MapPart> map) {
         this.map = map;
     }
 

@@ -7,7 +7,7 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        ArrayList<MapPart> map = new ArrayList<>(Arrays.asList(
+        List<MapPart> map = new ArrayList<>(Arrays.asList(
                 new MapPart(1, 0, 0), new MapPart(2, 0, 1), new MapPart(3, 0, 2),
                 new MapPart(4, 1, 0), new MapPart(5, 1, 1), new MapPart(6, 1, 2),
                 new MapPart(7, 2, 0), new MapPart(8, 2, 1), new MapPart(9, 2, 2)));
