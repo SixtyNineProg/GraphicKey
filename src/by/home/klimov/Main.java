@@ -6,6 +6,8 @@ import java.util.List;
 
 public class Main {
 
+    private static int counter = 0;
+
     public static void main(String[] args) {
         List<MapPart> map = new ArrayList<>(Arrays.asList(
                 new MapPart(1, 0, 0), new MapPart(2, 0, 1), new MapPart(3, 0, 2),
@@ -20,7 +22,7 @@ public class Main {
 
         doStep(rootNode);
 
-        System.out.println("Hello");
+        System.out.println(counter);
     }
 
     public static void doStep(GraphicNode rootNode) {
@@ -30,6 +32,7 @@ public class Main {
             tempGraphicNode.updateMap();
             tempGraphicNode.addAllowedTransitions();
             tempGraphicNode.printMap();
+            counter++;
             if (tempGraphicNode.getAllowedTransitions().size() != 0) {
                 doStep(tempGraphicNode);
             } else return;
