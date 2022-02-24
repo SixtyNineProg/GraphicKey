@@ -9,28 +9,29 @@ public class GraphicNode {
     private final int corX;
     private final int corY;
 
-    private List<GraphicNode> allowedTransitions;
+    private final List<GraphicNode> allowedTransitions = new ArrayList<>();
     private List<MapPart> map;
+    private List<Integer> history = new ArrayList<>();
 
-    public GraphicNode(int num, int corX, int corY) {
+    public GraphicNode(int num, int corY, int corX) {
         this.num = num;
         this.corX = corX;
         this.corY = corY;
     }
 
-    public GraphicNode(int num, int corX, int corY, List<MapPart> map) {
+    public GraphicNode(int num, int corY, int corX, List<MapPart> map, List<Integer> history) {
         this.num = num;
         this.corX = corX;
         this.corY = corY;
         this.map = map;
+        this.history = history;
     }
 
     public void updateMap() {
-        Objects.requireNonNull(map.stream()
-                        .filter(mapPart -> num == mapPart.getNum() && corX == mapPart.getCorX() && corY == mapPart.getCorY())
-                        .findAny()
-                        .orElse(null))
-                .setSelected(true);
+        map.stream()
+                .filter(mapPart -> num == mapPart.getNum() && corX == mapPart.getCorX() && corY == mapPart.getCorY())
+                .findAny().ifPresent(tempMapPart -> tempMapPart.setSelected(true));
+
     }
 
     public MapPart findInMap(int corX, int corY) {
@@ -41,8 +42,6 @@ public class GraphicNode {
     }
 
     public void addAllowedTransitions() {
-        ArrayList<GraphicNode> allowedTransactions
-                = new ArrayList<>();
         for (MapPart mapPart : map) {
             if (!mapPart.isSelected()) {
                 int differenceX = mapPart.getCorX() - corX;
@@ -54,12 +53,9 @@ public class GraphicNode {
                     if (differenceY < 0) tempMapPart = findInMap(corX, corY - 1);
                     else tempMapPart = findInMap(corX, corY + 1);
 
-                    if (tempMapPart.isSelected())
-                        allowedTransactions.add(new GraphicNode(
-                                mapPart.getNum(),
-                                mapPart.getCorX(),
-                                mapPart.getCorY(),
-                                getCloneMap()));
+                    if (tempMapPart.isSelected()) {
+                        addAllowedTransition(mapPart);
+                    }
                     continue;
                 }
                 if (differenceY == 0 && (differenceX > 1 || differenceX < -1)) {
@@ -69,11 +65,7 @@ public class GraphicNode {
                     else tempMapPart = findInMap(corX + 1, corY);
 
                     if (tempMapPart.isSelected())
-                        allowedTransactions.add(new GraphicNode(
-                                mapPart.getNum(),
-                                mapPart.getCorX(),
-                                mapPart.getCorY(),
-                                getCloneMap()));
+                        addAllowedTransition(mapPart);
                     continue;
                 }
                 if ((differenceX == 2 || differenceX == -2) && (differenceY == 2 || differenceY == -2)) {
@@ -85,21 +77,22 @@ public class GraphicNode {
                     else tempMapPart = findInMap(corX + 1, corY + 1);
 
                     if (tempMapPart.isSelected())
-                        allowedTransactions.add(new GraphicNode(
-                                mapPart.getNum(),
-                                mapPart.getCorX(),
-                                mapPart.getCorY(),
-                                getCloneMap()));
+                        addAllowedTransition(mapPart);
                     continue;
                 }
-                allowedTransactions.add(new GraphicNode(
-                        mapPart.getNum(),
-                        mapPart.getCorX(),
-                        mapPart.getCorY(),
-                        getCloneMap()));
+                addAllowedTransition(mapPart);
             }
         }
-        this.allowedTransitions = allowedTransactions;
+    }
+
+    private void addAllowedTransition(MapPart mapPart) {
+        GraphicNode graphicNode = new GraphicNode(
+                mapPart.getNum(),
+                mapPart.getCorY(),
+                mapPart.getCorX(),
+                getCloneMap(),
+                new ArrayList<>(history));
+        allowedTransitions.add(graphicNode);
     }
 
     public void printMap() {
@@ -118,6 +111,14 @@ public class GraphicNode {
 
     public void setMap(List<MapPart> map) {
         this.map = map;
+    }
+
+    public List<Integer> getHistory() {
+        return history;
+    }
+
+    public int getNum() {
+        return num;
     }
 
     @Override

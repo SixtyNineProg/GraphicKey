@@ -14,13 +14,23 @@ public class Main {
                 new MapPart(4, 1, 0), new MapPart(5, 1, 1), new MapPart(6, 1, 2),
                 new MapPart(7, 2, 0), new MapPart(8, 2, 1), new MapPart(9, 2, 2)));
 
-        GraphicNode rootNode = new GraphicNode(1, 0, 0);
+        List<GraphicNode> startNodes = new ArrayList<>(Arrays.asList(
+                new GraphicNode(1, 0, 0), new GraphicNode(2, 0, 1), new GraphicNode(3, 0, 2),
+                new GraphicNode(4, 1, 0), new GraphicNode(5, 1, 1), new GraphicNode(6, 1, 2),
+                new GraphicNode(7, 2, 0), new GraphicNode(8, 2, 1), new GraphicNode(9, 2, 2)));
 
-        rootNode.setMap(map);
-        rootNode.updateMap();
-        rootNode.addAllowedTransitions();
+        for (GraphicNode graphicNode : startNodes) {
 
-        doStep(rootNode);
+            List<MapPart> clonedMap = new ArrayList<>(map.size());
+            for (MapPart mapPart : map) clonedMap.add(new MapPart(mapPart));
+
+            graphicNode.setMap(clonedMap);
+            graphicNode.getHistory().add(graphicNode.getNum());
+            graphicNode.updateMap();
+            graphicNode.addAllowedTransitions();
+
+            doStep(graphicNode);
+        }
 
         System.out.println(counter);
     }
@@ -30,36 +40,18 @@ public class Main {
         if (rootAllowedTransaction.size() == 0) return;
         for (GraphicNode tempGraphicNode : rootAllowedTransaction) {
             tempGraphicNode.updateMap();
+            tempGraphicNode.getHistory().add(tempGraphicNode.getNum());
             tempGraphicNode.addAllowedTransitions();
-            tempGraphicNode.printMap();
-            counter++;
+
+            List<Integer> history = tempGraphicNode.getHistory();
+            if (history.size() >= 4) {
+                CustomFileWriter.writeToFile("out.txt", history.toString());
+                counter++;
+            }
+
             if (tempGraphicNode.getAllowedTransitions().size() != 0) {
                 doStep(tempGraphicNode);
             } else return;
         }
     }
 }
-
-//    List<TreeNode<GraphicNode>> children = rootNode.getChildren();
-//        for (TreeNode<GraphicNode> treeNode : children) {
-//        GraphicNode childGraphicNode = treeNode.getData();
-//        List<MapPart> allowedTransaction = childGraphicNode.getAllowedTransitions();
-//        for (MapPart mapPart : allowedTransaction) {
-//        GraphicNode tempGraphicNode =
-//        new GraphicNode(
-//        mapPart.getNum(),
-//        mapPart.getCorX(),
-//        mapPart.getCorY(),
-//        treeNode.getData().getCloneMap());
-//        tempGraphicNode.updateMap();
-//        tempGraphicNode.addAllowedTransitions();
-//
-//        tempGraphicNode.printMap();
-//
-//        treeNode.addChild(tempGraphicNode);
-//
-//        if (tempGraphicNode.getAllowedTransitions().size() != 0) {
-//        doStep();
-//        }
-//        }
-//        }
